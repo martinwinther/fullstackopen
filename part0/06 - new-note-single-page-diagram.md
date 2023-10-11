@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
 participant browser
 participant server
@@ -12,3 +13,4 @@ participant server
     deactivate server
 
     Note right of browser: Browser updates the UI without a full page reload
+```
