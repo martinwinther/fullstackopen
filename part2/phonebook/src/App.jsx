@@ -1,11 +1,22 @@
 import { useState } from "react";
 
-const App = () => {
+const App = (props) => {
 	const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
 	const [newName, setNewName] = useState("");
 
+	const checkDuplicate = (name) => {
+		return persons.some((person) => person.name === name);
+	};
+
 	const addName = (event) => {
 		event.preventDefault();
+
+		// Check for duplicates using the checkDuplicate function
+		if (checkDuplicate(newName)) {
+			alert(`${newName} is already added to the phonebook`);
+			return; // Exit the function if it's a duplicate
+		}
+
 		const nameObject = {
 			name: newName,
 		};
@@ -28,10 +39,9 @@ const App = () => {
 				</div>
 			</form>
 			<h2>Numbers</h2>
-			<div>debug: {newName}</div>
 			<ul>
-				{persons.map((person) => (
-					<li key={person.name}>{person.name}</li>
+				{persons.map((person, index) => (
+					<li key={index}>{person.name}</li>
 				))}
 			</ul>
 		</div>
