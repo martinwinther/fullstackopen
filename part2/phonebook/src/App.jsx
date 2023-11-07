@@ -1,9 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const App = (props) => {
-	const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+	const [persons, setPersons] = useState([
+		{ name: "Arto Hellas", number: "040-123456", id: 1 },
+		{ name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
+		{ name: "Dan Abramov", number: "12-43-234345", id: 3 },
+		{ name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
+	]);
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
+	const [searchName, setSearchName] = useState("");
+	const [filteredPersons, setFilteredPersons] = useState([]);
+
+	useEffect(() => {
+		// Filter the persons based on the searchName
+		const filtered = persons.filter((person) =>
+			person.name.toLowerCase().includes(searchName.toLowerCase())
+		);
+		setFilteredPersons(filtered);
+	}, [persons, searchName]);
 
 	const checkDuplicate = (name) => {
 		return persons.some((person) => person.name === name);
@@ -22,8 +37,17 @@ const App = (props) => {
 			name: newName,
 			number: newNumber,
 		};
+
+		// Update both the persons and filteredPersons arrays
 		setPersons(persons.concat(nameObject));
 		setNewName("");
+		setNewNumber("");
+
+		// Refilter the list based on the updated searchName
+		const filtered = persons.filter((person) =>
+			person.name.toLowerCase().includes(searchName.toLowerCase())
+		);
+		setFilteredPersons(filtered);
 	};
 
 	const handleNameChange = (event) => {
@@ -34,9 +58,16 @@ const App = (props) => {
 		setNewNumber(event.target.value);
 	};
 
+	const handleSearchChange = (event) => {
+		setSearchName(event.target.value);
+	};
+
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			filter shown with{" "}
+			<input value={searchName} onChange={handleSearchChange}></input>
+			<h2>add a new</h2>
 			<form onSubmit={addName}>
 				name:
 				<input value={newName} onChange={handleNameChange} />
@@ -53,7 +84,7 @@ const App = (props) => {
 					margin: 0,
 					textAlign: "left",
 				}}>
-				{persons.map((person, index) => (
+				{filteredPersons.map((person, index) => (
 					<li key={index}>
 						{person.name} {person.number}
 					</li>
