@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
@@ -9,6 +10,12 @@ const App = () => {
 	const [newNumber, setNewNumber] = useState("");
 	const [searchName, setSearchName] = useState("");
 	const [filteredPersons, setFilteredPersons] = useState([]);
+
+	useEffect(() => {
+		axios.get("http://localhost:3001/persons").then((response) => {
+			setPersons(response.data);
+		});
+	});
 
 	useEffect(() => {
 		// Filter the persons based on the searchName
