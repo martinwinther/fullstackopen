@@ -44,9 +44,11 @@ const App = () => {
 		};
 
 		// Update both the persons and filteredPersons arrays
-		setPersons(persons.concat(nameObject));
-		setNewName("");
-		setNewNumber("");
+		axios.post("http://localhost:3001/persons", nameObject).then((response) => {
+			setPersons(persons.concat(response.data));
+			setNewName("");
+			setNewNumber("");
+		});
 
 		// Refilter the list based on the updated searchName
 		const filtered = persons.filter((person) =>
