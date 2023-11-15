@@ -69,6 +69,23 @@ const App = () => {
 		setSearchName(event.target.value);
 	};
 
+	const handleDelete = (id) => {
+		// Find the person to be deleted from the state∂
+		const personToDelete = persons.find((person) => person.id === id);
+
+		// Confirm with the user before deleting
+		if (window.confirm(`Delete ${personToDelete.name}?`)) {
+			personService
+				.update(id, { ...personToDelete, number: "" })
+				.then(() => {
+					setPersons(persons.filter((person) => person.id !== id));
+				})
+				.catch((error) => {
+					console.error("Error deleting person:", error);
+				});
+		}
+	};
+
 	return (
 		<div>
 			<h2>Phonebook</h2>
@@ -94,7 +111,11 @@ const App = () => {
 					textAlign: "left",
 				}}>
 				{filteredPersons.map((person) => (
-					<Persons key={person.name} person={person} />
+					<Persons
+						key={person.name}
+						person={person}
+						handleDelete={handleDelete}
+					/>
 				))}
 			</ul>
 		</div>
