@@ -4,16 +4,17 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
 import personService from "./services/persons";
+
 const App = () => {
-	const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
 	const [searchName, setSearchName] = useState("");
 	const [filteredPersons, setFilteredPersons] = useState([]);
 
 	useEffect(() => {
-		personService.getAll().then((initalPersons) => {
-			setPersons(initalPersons);
+		personService.getAll().then((initialPersons) => {
+			setPersons(initialPersons);
 		});
 	}, []);
 
@@ -30,31 +31,57 @@ const App = () => {
 	};
 
 	const addName = (event) => {
-		event.preventDefault();
+		const isDuplicate = checkDuplicate(newName);
 
-		// Check for duplicates using the checkDuplicate function
-		if (checkDuplicate(newName)) {
-			alert(`${newName} is already added to the phonebook`);
-			return; // Exit the function if it's a duplicate
+		if (isDuplicate) {
+			const confirmMessage = `${newName} is already added to the phonebook, replace the old number with a new one?`;
+
+			if (window.confirm(confirmMessage)) {
+				// Find the existing person with the same name
+				const existingPerson = persons.find(
+					(person) => person.name === newName
+				);
+
+				// Update the existing person's number with the new number
+				const updatedPerson = { ...existingPerson, number: newNumber };
+
+				// Make an API call to update the person's data
+				personService
+					.update(existingPerson.id, updatedPerson)
+					.then((returnedPerson) => {
+						// Update the state with the updated person
+						setPersons(
+							persons.map((person) =>
+								person.id === returnedPerson.id ? returnedPerson : person
+							)
+						);
+						setNewName("");
+						setNewNumber("");
+					})
+					.catch((error) => {
+						console.error("Error updating person:", error);
+					});
+			}
+		} else {
+			// If the person is not a duplicate, create a new person entry
+			const nameObject = {
+				name: newName,
+				number: newNumber,
+			};
+
+			// Update both the persons and filteredPersons arrays
+			personService.create(nameObject).then((returnedPerson) => {
+				setPersons(persons.concat(returnedPerson));
+				setNewName("");
+				setNewNumber("");
+			});
+
+			// Refilter the list based on the updated searchName
+			const filtered = persons.filter((person) =>
+				person.name.toLowerCase().includes(searchName.toLowerCase())
+			);
+			setFilteredPersons(filtered);
 		}
-
-		const nameObject = {
-			name: newName,
-			number: newNumber,
-		};
-
-		// Update both the persons and filteredPersons arrays
-		personService.create(nameObject).then((returnedPerson) => {
-			setPersons(persons.concat(returnedPerson));
-			setNewName("");
-			setNewNumber("");
-		});
-
-		// Refilter the list based on the updated searchName
-		const filtered = persons.filter((person) =>
-			person.name.toLowerCase().includes(searchName.toLowerCase())
-		);
-		setFilteredPersons(filtered);
 	};
 
 	const handleNameChange = (event) => {
@@ -70,7 +97,7 @@ const App = () => {
 	};
 
 	const handleDelete = (id) => {
-		// Find the person to be deleted from the state∂
+		// Find the person to be deleted from the state
 		const personToDelete = persons.find((person) => person.id === id);
 
 		// Confirm with the user before deleting
