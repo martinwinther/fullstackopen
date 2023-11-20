@@ -11,7 +11,10 @@ const App = () => {
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
 	const [searchName, setSearchName] = useState("");
-	const [successMessage, setSuccessMessage] = useState(null);
+	const [messageInfo, setMessageInfo] = useState({
+		message: null,
+		type: null,
+	});
 
 	useEffect(() => {
 		personService.getAll().then((initialPersons) => {
@@ -19,10 +22,10 @@ const App = () => {
 		});
 	}, []);
 
-	const showSuccessMessage = (message) => {
-		setSuccessMessage(message);
+	const showMessage = (message, type) => {
+		setMessageInfo({ message, type });
 		setTimeout(() => {
-			setSuccessMessage(null);
+			setMessageInfo({ message: null, type: null });
 		}, 5000);
 	};
 
@@ -46,7 +49,7 @@ const App = () => {
 							p.id === returnedPerson.id ? returnedPerson : p
 						)
 					);
-					showSuccessMessage(`Updated ${returnedPerson.name}`);
+					showMessage(`Updated ${returnedPerson.name}`, "success");
 				} catch (error) {
 					console.error("Error updating person:", error);
 				}
@@ -56,7 +59,7 @@ const App = () => {
 			try {
 				const returnedPerson = await personService.create(newPerson);
 				setPersons(persons.concat(returnedPerson));
-				showSuccessMessage(`Added ${returnedPerson.name}`);
+				showMessage(`Added ${returnedPerson.name}`, "success");
 			} catch (error) {
 				console.error("Error adding person:", error);
 			}
@@ -81,10 +84,15 @@ const App = () => {
 		const personToDelete = persons.find((person) => person.id === id);
 		if (window.confirm(`Delete ${personToDelete.name}?`)) {
 			try {
-				await personService.update(id, { ...personToDelete, number: "" });
+				await personService.deletePerson(id);
 				setPersons(persons.filter((person) => person.id !== id));
+				showMessage(`Deleted ${personToDelete.name}`, "success"); // Specify 'success' type
 			} catch (error) {
 				console.error("Error deleting person:", error);
+				showMessage(
+					`Information on ${personToDelete.name} has already been removed from server`,
+					"error" // Specify 'error' type
+				);
 			}
 		}
 	};
@@ -97,7 +105,8 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
-			<Notification message={successMessage} />
+			<Notification message={messageInfo.message} type={messageInfo.type} />
+
 			<Filter searchName={searchName} handleSearchChange={handleSearchChange} />
 			<h2>Add a new</h2>
 			<PersonForm
