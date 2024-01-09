@@ -52,6 +52,7 @@ const App = () => {
 					showMessage(`Updated ${returnedPerson.name}`, "success");
 				} catch (error) {
 					console.error("Error updating person:", error);
+					showMessage(error.response.data.error, "error");
 				}
 			}
 		} else {
@@ -62,6 +63,7 @@ const App = () => {
 				showMessage(`Added ${returnedPerson.name}`, "success");
 			} catch (error) {
 				console.error("Error adding person:", error);
+				showMessage(error.response.data.error, "error");
 			}
 		}
 		setNewName("");
