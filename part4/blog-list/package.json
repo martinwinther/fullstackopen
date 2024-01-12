@@ -10,11 +10,15 @@
   "description": "Blog list from fullstackopen",
   "main": "index.js",
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "^3.0.2"
   },
   "scripts": {
-    "test": "test",
+    "test": "jest --verbose",
     "start": "nodemon index.js"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "author": "",
   "license": "ISC"
