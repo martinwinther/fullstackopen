@@ -145,3 +145,37 @@ describe('most blogs', () => {
     expect(result).toBe(null)
   })
 })
+
+describe('most likes', () => {
+  const blogs = [
+    { author: 'Author One', likes: 5 },
+    { author: 'Author Two', likes: 10 },
+    { author: 'Author One', likes: 15 },
+    { author: 'Author Three', likes: 7 },
+    { author: 'Author Two', likes: 4 },
+    { author: 'Author Three', likes: 8 },
+  ]
+
+  test('author with the most likes', () => {
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual({
+      author: 'Author One',
+      likes: 20,
+    })
+  })
+
+  test('when list is empty', () => {
+    const result = listHelper.mostLikes([])
+    expect(result).toBe(null)
+  })
+
+  test('when all authors have equal likes', () => {
+    const equalBlogs = [
+      { author: 'Author One', likes: 10 },
+      { author: 'Author Two', likes: 10 },
+      { author: 'Author Three', likes: 10 },
+    ]
+    const result = listHelper.mostLikes(equalBlogs)
+    expect(result.likes).toBe(10)
+  })
+})
