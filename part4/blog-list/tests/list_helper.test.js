@@ -119,6 +119,29 @@ describe('favorite blog', () => {
     ]
     const result = listHelper.favoriteBlog(blogs)
     expect(result.likes).toBe(10)
-    // Since either Blog One or Blog Two could be returned, we only check the likes
+  })
+})
+
+describe('most blogs', () => {
+  const blogs = [
+    { author: 'Author One', likes: 5 },
+    { author: 'Author Two', likes: 3 },
+    { author: 'Author One', likes: 7 },
+    { author: 'Author Three', likes: 2 },
+    { author: 'Author One', likes: 1 },
+    { author: 'Author Three', likes: 4 },
+  ]
+
+  test('author with the most blogs', () => {
+    const result = listHelper.mostBlogs(blogs)
+    expect(result).toEqual({
+      author: 'Author One',
+      blogs: 3,
+    })
+  })
+
+  test('when list is empty', () => {
+    const result = listHelper.mostBlogs([])
+    expect(result).toBe(null)
   })
 })
