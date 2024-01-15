@@ -74,3 +74,51 @@ describe('total likes', () => {
     expect(listHelper.totalLikes(blogs)).toBe(36)
   })
 })
+
+describe('favorite blog', () => {
+  test('of empty list is null', () => {
+    const blogs = []
+    expect(listHelper.favoriteBlog(blogs)).toBe(null)
+  })
+
+  test('when list has only one blog, it is the favorite', () => {
+    const blogs = [
+      {
+        title: 'Blog One',
+        author: 'Author One',
+        likes: 5,
+      },
+    ]
+    const result = listHelper.favoriteBlog(blogs)
+    expect(result).toEqual({
+      title: 'Blog One',
+      author: 'Author One',
+      likes: 5,
+    })
+  })
+
+  test('of a bigger list is the one with most likes', () => {
+    const blogs = [
+      { title: 'Blog One', author: 'Author One', likes: 5 },
+      { title: 'Blog Two', author: 'Author Two', likes: 10 },
+      { title: 'Blog Three', author: 'Author Three', likes: 3 },
+    ]
+    const result = listHelper.favoriteBlog(blogs)
+    expect(result).toEqual({
+      title: 'Blog Two',
+      author: 'Author Two',
+      likes: 10,
+    })
+  })
+
+  test('when multiple blogs have same highest likes, return one of them', () => {
+    const blogs = [
+      { title: 'Blog One', author: 'Author One', likes: 10 },
+      { title: 'Blog Two', author: 'Author Two', likes: 10 },
+      { title: 'Blog Three', author: 'Author Three', likes: 3 },
+    ]
+    const result = listHelper.favoriteBlog(blogs)
+    expect(result.likes).toBe(10)
+    // Since either Blog One or Blog Two could be returned, we only check the likes
+  })
+})
