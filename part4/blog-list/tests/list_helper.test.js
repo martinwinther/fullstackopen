@@ -117,3 +117,36 @@ describe('favorite blog', () => {
 		assert.strictEqual(result.likes, 10)
 	})
 })
+
+describe('most blogs', () => {
+	test('finds the author with the most blogs', () => {
+		const blogs = [
+			{ author: 'Robert C. Martin', likes: 10 },
+			{ author: 'Robert C. Martin', likes: 7 },
+			{ author: 'Edsger W. Dijkstra', likes: 5 },
+			{ author: 'Robert C. Martin', likes: 12 },
+		]
+		const result = listHelper.mostBlogs(blogs)
+		assert.deepStrictEqual(result, {
+			author: 'Robert C. Martin',
+			blogs: 3,
+		})
+	})
+
+	test('returns null for an empty array', () => {
+		const blogs = []
+		const result = listHelper.mostBlogs(blogs)
+		assert.strictEqual(result, null)
+	})
+
+	test('when multiple authors have the same number of blogs, returns any of them', () => {
+		const blogs = [
+			{ author: 'Robert C. Martin', likes: 10 },
+			{ author: 'Edsger W. Dijkstra', likes: 5 },
+			{ author: 'Robert C. Martin', likes: 12 },
+			{ author: 'Edsger W. Dijkstra', likes: 10 },
+		]
+		const result = listHelper.mostBlogs(blogs)
+		assert.strictEqual(result.blogs, 2) // Only checks the number of blogs, not the specific author
+	})
+})
