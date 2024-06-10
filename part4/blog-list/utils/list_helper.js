@@ -50,19 +50,27 @@ const mostBlogs = (blogs) => {
 }
 
 const mostLikes = (blogs) => {
-	if (blogs.length === 0) {
-		return null
+	if (blogs.length === 0) return null
+
+	const likesPerAuthor = blogs.reduce((acc, blog) => {
+		acc[blog.author] = (acc[blog.author] || 0) + blog.likes
+		return acc
+	}, {})
+
+	let maxLikes = 0
+	let authorWithMostLikes = ''
+
+	for (const author in likesPerAuthor) {
+		if (likesPerAuthor[author] > maxLikes) {
+			maxLikes = likesPerAuthor[author]
+			authorWithMostLikes = author
+		}
 	}
 
-	const likesPerAuthor = _(blogs)
-		.groupBy('author')
-		.map((blogs, author) => ({
-			author,
-			likes: _.sumBy(blogs, 'likes'),
-		}))
-		.value()
-
-	return _.maxBy(likesPerAuthor, 'likes')
+	return {
+		author: authorWithMostLikes,
+		likes: maxLikes,
+	}
 }
 
 module.exports = {
