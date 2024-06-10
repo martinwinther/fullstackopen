@@ -11,7 +11,7 @@
 		"deploy:full": "npm run build:ui && npm run deploy",
 		"logs:prod": "fly logs",
 		"lint": "eslint .",
-		"test": "node --test"
+		"test": "cross-env NODE_ENV=test node --test"
 	},
 	"author": "Martin Winther",
 	"license": "MIT",

@@ -5,6 +5,7 @@
 		"express": "^4.18.2",
 		"fly": "^4.6.3",
 		"lodash": "^4.17.21",
+		"cross-env": "^7.0.3",
 		"mongoose": "^8.0.3"
 	},
 	"name": "blog-list",
@@ -12,7 +13,6 @@
 	"description": "Blog list from fullstackopen",
 	"main": "index.js",
 	"devDependencies": {
-		"cross-env": "^7.0.3",
 		"nodemon": "^3.0.2"
 	},
 	"scripts": {
