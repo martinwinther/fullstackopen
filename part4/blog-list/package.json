@@ -1,19 +1,20 @@
 {
 	"dependencies": {
 		"cors": "^2.8.5",
+		"cross-env": "^7.0.3",
 		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
 		"fly": "^4.6.3",
 		"lodash": "^4.17.21",
-		"cross-env": "^7.0.3",
-		"mongoose": "^8.0.3"
+		"mongoose": "^8.4.1"
 	},
 	"name": "blog-list",
 	"version": "1.0.0",
 	"description": "Blog list from fullstackopen",
 	"main": "index.js",
 	"devDependencies": {
-		"nodemon": "^3.0.2"
+		"nodemon": "^3.0.2",
+		"supertest": "^7.0.0"
 	},
 	"scripts": {
 		"test": "node --test",
